@@ -1,5 +1,8 @@
+import com.codahale.metrics.Counter;
+import org.eclipse.microprofile.metrics.annotation.Metered;
 import org.glassfish.jersey.process.internal.RequestScoped;
-
+import org.eclipse.microprofile.health.Health;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -11,9 +14,12 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("profile")
+@Health
 public class ProfileResource {
 
+
     @POST
+    @Metered(name = "packets-delivered-meter")
     @Path("packets-delivered")
     public Response packetsDelivered(User user) {
         int packetsDelivered = -1;
@@ -26,8 +32,17 @@ public class ProfileResource {
     }
 
     @GET
-    @Path("health")
-    public Response health() {
-        return Response.ok("OK").build();
+    @Path("fibonacci-load/{num}")
+    public Response fibonacciLoad(@PathParam("num") int num) {
+        return Response.ok(fibonacci(num)).build();
+    }
+
+    private int fibonacci(int n)  {
+        if (n == 0)
+            return 0;
+        else if(n == 1)
+            return 1;
+        else
+            return fibonacci(n - 1) + fibonacci(n - 2);
     }
 }
