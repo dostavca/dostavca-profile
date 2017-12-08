@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 @Health
 public class ProfileResource {
 
-
     @POST
     @Metered(name = "packets-delivered-meter")
     @Path("packets-delivered")
