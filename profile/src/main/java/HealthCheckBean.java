@@ -1,10 +1,13 @@
 
+import com.kumuluz.ee.configuration.cdi.ConfigBundle;
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
 import org.eclipse.microprofile.health.Health;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.inject.Inject;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Optional;
@@ -16,6 +19,7 @@ import java.util.logging.Logger;
 
 @Health
 @ApplicationScoped
+@ConfigBundle("profile-config")
 public class HealthCheckBean implements HealthCheck {
 
     private static final String url = "https://google.si";
@@ -24,7 +28,10 @@ public class HealthCheckBean implements HealthCheck {
 
     @Override
     public HealthCheckResponse call() {
-        if (ConfigurationUtil.getInstance().getBoolean("is-running").isPresent() && !ConfigurationUtil.getInstance().getBoolean("is-running").get()) {
+//        if (ConfigurationUtil.getInstance().getBoolean("is-running").isPresent() && !ConfigurationUtil.getInstance().getBoolean("is-running").get()) {
+//            return HealthCheckResponse.named(HealthCheckBean.class.getSimpleName()).down().build();
+//        }
+        if (!ProfileResource.isRunning()) {
             return HealthCheckResponse.named(HealthCheckBean.class.getSimpleName()).down().build();
         }
         try {
@@ -35,8 +42,6 @@ public class HealthCheckBean implements HealthCheck {
             if (connection.getResponseCode() == 200) {
                 return HealthCheckResponse.named(HealthCheckBean.class.getSimpleName()).up().build();
             }
-
-            Optional<Boolean> isRunning = ConfigurationUtil.getInstance().getBoolean("is-running");
         } catch (Exception exception) {
             LOG.severe(exception.getMessage());
         }

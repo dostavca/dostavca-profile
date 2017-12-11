@@ -6,12 +6,16 @@ kumuluzee:
   server:
     http:
       port: 8081
+  config:
+      start-retry-delay-ms: 500
+      max-retry-delay-ms: 900000
+      etcd:
+        hosts: http://35.195.125.144:2379
   discovery:
     etcd:
-      hosts: http://192.168.99.100:2379
+      hosts: http://35.195.125.144:2379
     ttl: 20
     ping-interval: 15
   metrics:
     servlet:
       mapping: /metrics
-is_running: false

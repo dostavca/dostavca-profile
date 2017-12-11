@@ -1,4 +1,7 @@
 import com.codahale.metrics.Counter;
+import com.kumuluz.ee.configuration.cdi.ConfigBundle;
+import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
+import com.kumuluz.ee.logs.cdi.Log;
 import org.eclipse.microprofile.metrics.annotation.Metered;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.eclipse.microprofile.health.Health;
@@ -10,12 +13,19 @@ import javax.ws.rs.core.Response;
 /**
  * Created by Aljaz on 25/10/2017.
  */
+@Log
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("profile")
 @Health
 public class ProfileResource {
+
+    static boolean running = true;
+
+    public static boolean isRunning() {
+        return running;
+    }
 
     @POST
     @Metered(name = "packets-delivered-meter")
@@ -28,6 +38,13 @@ public class ProfileResource {
             packetsDelivered = 294;
         }
         return Response.ok(packetsDelivered).build();
+    }
+
+    @GET
+    @Path("kill-service")
+    public Response killService() {
+        running = !running;
+        return Response.ok(running).build();
     }
 
     @GET
