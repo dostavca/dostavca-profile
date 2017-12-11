@@ -15,7 +15,7 @@ cache:
 
 script:
   - mvn clean package -U
-  - docker build -t aljazb/dostavca-profile:1.0-SNAPSHOT .
+  - docker build -t aljazb/dostavca-profile:latest .
 
 after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
