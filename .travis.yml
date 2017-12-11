@@ -19,4 +19,4 @@ script:
 
 after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker push aljazb/dostavca-profile:1.0-SNAPSHOT
+  - docker push aljazb/dostavca-profile:latest
