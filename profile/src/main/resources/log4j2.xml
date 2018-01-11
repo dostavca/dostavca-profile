@@ -13,7 +13,7 @@
 </Appenders>
 <Loggers>
     <!-- Default logger -->
-    <Root level="info">
+    <Root level="trace">
         <AppenderRef ref="console"/>
         <AppenderRef ref="logstash"/>
     </Root>
